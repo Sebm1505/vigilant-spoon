@@ -175,10 +175,19 @@
             border-radius: 6px;
             background: white;
             font-size: 0.95rem;
-            min-width: 120px;
-            max-width: 180px;
+            min-width: 110px;
+            max-width: 140px;
             color: #333;
             flex-shrink: 1;
+            /* Fix dropdown arrow and spacing */
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            padding-right: 32px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
         }
         
         .category-select:focus {
@@ -263,8 +272,8 @@
             flex: 1;
             min-width: 0;
             overflow: hidden;
-            padding-right: 120px; /* Make space for the button */
-            padding-bottom: 60px; /* Make space for button at bottom */
+            padding-right: 40px; /* Slightly more space for button */
+            padding-bottom: 40px; /* Reduced bottom padding for better text flow */
         }
         
         /* Title and Author - SMALLER gap between them */
@@ -314,15 +323,15 @@
         }
         
         .more-details-btn {
-            background: #28a745;
-            color: white;
+            background: #28a745 !important;
+            color: white !important;
             border: none;
             padding: 12px 24px;
             border-radius: 6px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            text-decoration: none;
+            text-decoration: none !important;
             display: inline-block;
             transition: all 0.3s ease;
             text-transform: capitalize;
@@ -331,9 +340,9 @@
         }
         
         .more-details-btn:hover {
-            background: #218838;
-            color: white;
-            text-decoration: none;
+            background: #218838 !important;
+            color: white !important;
+            text-decoration: none !important;
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
         }
@@ -399,7 +408,7 @@
         }
         
         .back-btn {
-            background: #6c757d;
+            background: #28a745;
             color: white;
             padding: 12px 24px;
             border-radius: 6px;
@@ -407,15 +416,15 @@
             font-weight: 600;
             display: inline-block;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
         }
         
         .back-btn:hover {
-            background: #5a6268;
+            background: #218838;
             color: white;
             text-decoration: none;
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(108, 117, 125, 0.4);
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
         }
         
         .bottom-right-actions {
@@ -545,6 +554,9 @@
                 top: 0;
                 left: 0;
                 overflow: hidden; /* Hide overflow content */
+                /* Mobile background - show full library image from top */
+                background-size: cover !important;
+                background-position: center top !important;
             }
             
             .sidebar.show {
@@ -557,16 +569,23 @@
                 height: 100%;
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                justify-content: flex-start; /* Align to top instead of center */
+                padding-top: 25px;
             }
             
             .sidebar .sidebar-title {
                 font-size: 1.5rem;
                 margin-bottom: 15px;
+                text-align: center;
             }
             
             .sidebar .sidebar-nav {
-                margin-top: 10px;
+                margin-top: 5px;
+            }
+            
+            .sidebar .nav-link {
+                text-align: center;
+                padding: 10px 15px;
             }
             
             .main-content {
@@ -661,6 +680,14 @@
             .book-count {
                 font-size: 1rem;
             }
+            
+            /* Make book covers full width on very small screens */
+            .book-cover {
+                width: 100% !important;
+                max-width: 200px;
+                height: auto;
+                align-self: center;
+            }
         }
         
         /* Additional fix for very small screens */
@@ -675,6 +702,19 @@
             
             .page-header {
                 padding: 15px;
+            }
+            
+            /* Full width book covers on very small screens */
+            .book-cover {
+                width: 100% !important;
+                max-width: none !important;
+                height: auto;
+                align-self: center;
+                border-radius: 8px;
+            }
+            
+            .book-card {
+                padding: 12px;
             }
         }
     </style>
