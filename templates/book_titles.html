@@ -68,34 +68,12 @@
                             
                             <!-- Book Metadata - Only Category and Pages -->
                             <div class="book-meta">
-                                {% if book.category %}
-                                    <strong>Category:</strong> {{ book.category }}
-                                {% endif %}
-                                {% if book.pages %}
-                                    <br>
-                                    <strong>Pages:</strong> {{ book.pages }}
-                                {% endif %}
+                                <strong>Category:</strong> {{ book.category }}{% if book.get('pages') %}<br><strong>Pages:</strong> {{ book.pages }}{% endif %}
                             </div>
-
-                            <!-- Book Description Preview (first and last paragraphs only) -->
+                            
+                            <!-- Book Description Preview (first and last paragraphs with spacing) -->
                             <div class="book-description">
-                                {% if book.description %}
-                                    {% set sentences = book.description.split('. ') %}
-                                    {% if sentences|length >= 2 %}
-                                        <!-- First sentence/paragraph -->
-                                        {{ sentences[0] }}.
-                                        
-                                        <!-- Last sentence/paragraph if more than 2 sentences -->
-                                        {% if sentences|length > 2 %}
-                                            <br><br>
-                                            {{ sentences[-1] if sentences[-1].endswith('.') else sentences[-1] + '.' }}
-                                        {% endif %}
-                                    {% else %}
-                                        {{ book.description[:250] }}{% if book.description|length > 250 %}...{% endif %}
-                                    {% endif %}
-                                {% else %}
-                                    No description available for this book.
-                                {% endif %}
+                                {{ book.description_preview|safe }}
                             </div>
                         </div>
                         

@@ -25,14 +25,13 @@
             overflow-x: hidden;
         }
         
-
         /* Sidebar with blurred library background */
         .sidebar {
             background: url('https://library.suss.edu.sg/wp-content/uploads/2023/11/Study-Space_High-table-2-cropped-300x200.png');
-            background-size: cover;
-            background-position: center;
+            background-size: auto 100%; /* Maintain aspect ratio, fit height */
+            background-position: left center; /* Take from leftmost 250px */
             background-repeat: no-repeat;
-            backdrop-filter: blur(6px); /* Stronger blur */
+            backdrop-filter: blur(4px); /* Blur the image */
             min-height: 100vh;
             padding: 0;
             position: fixed;
@@ -40,10 +39,9 @@
             top: 0;
             width: 250px;
             z-index: 1000;
-            color: #2d2d2d; /* Dark text since background is lighter */
         }
-
-        /* Remove dark overlay — instead use a very soft translucent white layer */
+        
+        /* Additional blur overlay for better text readability */
         .sidebar::before {
             content: '';
             position: absolute;
@@ -51,8 +49,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 255, 255, 0.4); /* light translucent layer */
-            backdrop-filter: blur(2px);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(1px);
         }
         
         .sidebar-content {
@@ -211,10 +209,10 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
-        /* Content Body */
+        /* Content Body with green background like book grid */
         .content-body {
             padding: 30px;
-            background-color: #f8fdf8;
+            background-color: #f8fdf8; /* Same green background as book grid */
             width: 100%;
             max-width: 100%;
             box-sizing: border-box;
@@ -340,7 +338,149 @@
             box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
         }
         
-        /* Responsive design - Enhanced for better mobile experience */
+        /* Book details page styles - remove boxes and styling */
+        .book-details-container {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        
+        .book-details-cover {
+            width: 200px;
+            height: auto;
+            border-radius: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+        
+        .book-details-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        /* Integrate everything with same styling as description text */
+        .book-meta,
+        .book-details-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .book-meta {
+            margin: 0 0 20px 0; /* Space before description */
+        }
+        
+        .book-details-description {
+            margin: 0;
+        }
+        
+        /* Only bold the numbers, not the labels */
+        .bold-number {
+            font-weight: 700;
+        }
+        
+        .full-description {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+        
+        .description-title {
+            color: #2d5a3d;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(108, 117, 125, 0.4);
+        }
+        
+        .bottom-right-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        /* Mobile responsiveness for book details */
+        @media (max-width: 768px) {
+            .book-details-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .book-details-cover {
+                width: 160px;
+                align-self: center;
+            }
+            
+            .book-details-info {
+                text-align: left;
+            }
+            
+            .bottom-right-actions {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .book-details-container {
+                gap: 15px;
+            }
+            
+            .book-details-cover {
+                width: 140px;
+            }
+            
+            .full-description {
+                padding: 20px;
+            }
+        }
+        .mobile-menu-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: white !important;
+            color: #2d5a3d !important;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+        }
+        
+        .mobile-menu-toggle:hover {
+            background: #f8f9fa !important;
+            color: #2d5a3d !important;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
         @media (max-width: 1200px) {
             .stats-search-bar {
                 padding: 15px 20px;
@@ -391,13 +531,42 @@
         }
         
         @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block !important;
+            }
+            
             .sidebar {
-                transform: translateX(-100%);
+                transform: translateY(-100%); /* Slide from top instead of left */
                 transition: transform 0.3s ease;
+                width: 100%; /* Full width on mobile */
+                height: 180px; /* Fixed height - cuts off after book titles */
+                min-height: 180px; /* Same as height */
+                position: fixed;
+                top: 0;
+                left: 0;
+                overflow: hidden; /* Hide overflow content */
             }
             
             .sidebar.show {
-                transform: translateX(0);
+                transform: translateY(0); /* Slide down from top */
+            }
+            
+            /* Adjust sidebar content for mobile dropdown */
+            .sidebar .sidebar-content {
+                padding: 20px;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            
+            .sidebar .sidebar-title {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            
+            .sidebar .sidebar-nav {
+                margin-top: 10px;
             }
             
             .main-content {
@@ -538,10 +707,9 @@
         </div>
     </div>
 
-    <!-- Mobile menu toggle button -->
-    <button class="btn btn-success d-lg-none" 
+    <!-- Mobile menu toggle button with white background -->
+    <button class="mobile-menu-toggle d-lg-none" 
             type="button" 
-            style="position: fixed; top: 20px; left: 20px; z-index: 1001; background: #2d5a3d;"
             onclick="document.getElementById('sidebar').classList.toggle('show')">
         ☰
     </button>
