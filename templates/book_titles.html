@@ -66,14 +66,17 @@
                             <h2 class="book-title">{{ book.title }}</h2>
                             <h3 class="book-author">By {{ book.author }}</h3>
                             
-                            <!-- Book Metadata -->
+                            <!-- Book Metadata - Only Category and Pages -->
                             <div class="book-meta">
-                                <strong>Category:</strong> {{ book.category }}{% if book.get('pages') %}, <strong>Pages:</strong> {{ book.pages }}{% endif %}
-                                <br>
-                                <strong>Published:</strong> {{ book.publication_year }} by {{ book.publisher }}
-                                {% if book.isbn %}<br><strong>ISBN:</strong> {{ book.isbn }}{% endif %}
+                                {% if book.category %}
+                                    <strong>Category:</strong> {{ book.category }}
+                                {% endif %}
+                                {% if book.pages %}
+                                    <br>
+                                    <strong>Pages:</strong> {{ book.pages }}
+                                {% endif %}
                             </div>
-                            
+
                             <!-- Book Description Preview (first and last paragraphs only) -->
                             <div class="book-description">
                                 {% if book.description %}
