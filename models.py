@@ -1,6 +1,51 @@
-from mongoengine import Document, StringField, ListField, IntField
+from mongoengine import Document, StringField, ListField, IntField, BooleanField
 from books import all_books
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
+class User(UserMixin, Document):
+    """
+    User document class for MongoDB storage.
+    Maps to the User collection in the database.
+    """
+    email = StringField(required=True, unique=True, max_length=100)
+    password_hash = StringField(required=True)
+    name = StringField(required=True, max_length=100)
+    is_admin = BooleanField(default=False)
+    
+    # MongoDB collection name
+    meta = {
+        'collection': 'users',
+        'indexes': ['email']
+    }
+    
+    def set_password(self, password):
+        """Hash and set the user's password."""
+        self.password_hash = generate_password_hash(password)
+    
+    def check_password(self, password):
+        """Check if the provided password matches the hash."""
+        return check_password_hash(self.password_hash, password)
+    
+    @classmethod
+    def get_by_email(cls, email):
+        """
+        Get a user by email address.
+        
+        Args:
+            email (str): User's email address
+        
+        Returns:
+            User or None: User document if found, None otherwise
+        """
+        try:
+            return cls.objects.get(email=email.lower())
+        except cls.DoesNotExist:
+            return None
+    
+    def __str__(self):
+        """String representation of User."""
+        return f"{self.name} ({self.email})"
 
 class Book(Document):
     """

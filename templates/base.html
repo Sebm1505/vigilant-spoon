@@ -38,6 +38,29 @@
                                 <i class="fas fa-address-card text-light fa-lg me-2"></i>Book Titles
                             </a>
                         </li>
+                        
+                        <!-- Login and Register links (only show when not authenticated) -->
+                        {% if not current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="{{ url_for('login') }}" class="nav-link text-white px-3 py-2">
+                                <i class="fas fa-arrow-right-to-bracket text-light fa-lg me-2"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('register') }}" class="nav-link text-white px-3 py-2">
+                                <i class="fas fa-user text-light fa-lg me-2"></i>Register
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        <!-- Logout link (only show when authenticated) -->
+                        {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="{{ url_for('logout') }}" class="nav-link text-white px-3 py-2">
+                                <i class="fas fa-arrow-right-from-bracket text-light fa-lg me-2"></i>Logout
+                            </a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
                 <!-- End of desktop sidebar -->
@@ -49,6 +72,9 @@
                             <h4 class="text-uppercase mb-0">{% block page_title %}Library{% endblock %}</h4>
                         </div>
                         <div class="col-md-8 text-end">
+                            {% if current_user.is_authenticated %}
+                            <span class="text-dark fw-semibold">Welcome, {{ current_user.name }}!</span>
+                            {% endif %}
                             {% block navbar_content %}
                             <!-- Page-specific content goes here -->
                             {% endblock %}
@@ -72,6 +98,29 @@
                         <i class="fas fa-address-card text-light fa-lg me-2"></i>Book Titles
                     </a>
                 </li>
+                
+                <!-- Login and Register links (only show when not authenticated) -->
+                {% if not current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="{{ url_for('login') }}" class="nav-link text-white px-3 py-2">
+                        <i class="fas fa-arrow-right-to-bracket text-light fa-lg me-2"></i>Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('register') }}" class="nav-link text-white px-3 py-2">
+                        <i class="fas fa-user text-light fa-lg me-2"></i>Register
+                    </a>
+                </li>
+                {% endif %}
+                
+                <!-- Logout link (only show when authenticated) -->
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="{{ url_for('logout') }}" class="nav-link text-white px-3 py-2">
+                        <i class="fas fa-arrow-right-from-bracket text-light fa-lg me-2"></i>Logout
+                    </a>
+                </li>
+                {% endif %}
             </ul>
         </div>
         
@@ -80,6 +129,9 @@
             <div class="row align-items-center">
                 <div class="col-12">
                     <h4 class="text-uppercase mb-0">{{ self.page_title() }}</h4>
+                    {% if current_user.is_authenticated %}
+                    <span class="text-dark fw-semibold" style="font-size: 0.9rem;">Welcome, {{ current_user.name }}!</span>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -91,6 +143,22 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xl-10 col-lg-9 col-md-8 ms-auto main-content">
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    {% for category, message in messages %}
+                                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                            {{ message }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    
                     <div class="row mt-3 mb-5">
                         {% block mainblock %}
                         {% endblock %}
