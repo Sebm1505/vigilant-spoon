@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from models import Book, User
 from mongoengine import connect
+from functools import wraps
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
@@ -28,6 +29,19 @@ def load_user(user_id):
         return User.objects.get(id=user_id)
     except User.DoesNotExist:
         return None
+
+# Admin required decorator
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            flash('Please log in to access this page.', 'danger')
+            return redirect(url_for('login'))
+        if not current_user.is_admin:
+            flash('You do not have permission to access this page.', 'danger')
+            return redirect(url_for('book_titles'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 # Initialize Book collection on startup
 with app.app_context():
@@ -95,6 +109,81 @@ def book_details(book_id):
     
     return render_template('book_details.html', book=book)
 
+@app.route('/new-book', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_book():
+    """Handle adding a new book (admin only)."""
+    # List of genres for the form
+    genres = ["Animals", "Business", "Comics", "Communication", "Dark Academia", 
+              "Emotion", "Fantasy", "Fiction", "Friendship", "Graphic Novels", 
+              "Grief", "Historical Fiction", "Indigenous", "Inspirational", "Magic", 
+              "Mental Health", "Nonfiction", "Personal Development", "Philosophy", 
+              "Picture Books", "Poetry", "Productivity", "Psychology", "Romance", 
+              "School", "Self Help"]
+    
+    if request.method == 'POST':
+        # Get form data
+        selected_genres = request.form.getlist('genres')
+        title = request.form.get('title', '').strip()
+        category = request.form.get('category', '').strip()
+        url = request.form.get('url', '').strip()
+        description = request.form.get('description', '').strip()
+        pages = request.form.get('pages', type=int)
+        copies = request.form.get('copies', type=int)
+        
+        # Validate required fields
+        if not all([selected_genres, title, category, url, description, pages, copies]):
+            flash('Please fill in all required fields.', 'danger')
+            return render_template('new_book.html', genres=genres)
+        
+        # Process authors (up to 5)
+        authors = []
+        for i in range(1, 6):
+            author_name = request.form.get(f'author{i}', '').strip()
+            is_illustrator = request.form.get(f'illustrator{i}') == 'yes'
+            
+            if author_name:
+                if is_illustrator:
+                    authors.append(f"{author_name} (Illustrator)")
+                else:
+                    authors.append(author_name)
+        
+        # Validate at least one author
+        if not authors:
+            flash('Please provide at least one author.', 'danger')
+            return render_template('new_book.html', genres=genres)
+        
+        # Process description into paragraphs
+        # Split by double line breaks or double newlines
+        description_paragraphs = [p.strip() for p in description.replace('\r\n', '\n').split('\n\n') if p.strip()]
+        if not description_paragraphs:
+            description_paragraphs = [description]
+        
+        try:
+            # Create new book
+            new_book = Book(
+                genres=selected_genres,
+                title=title,
+                category=category,
+                url=url,
+                description=description_paragraphs,
+                authors=authors,
+                pages=pages,
+                available=copies,  # Initially all copies are available
+                copies=copies
+            )
+            new_book.save()
+            
+            flash(f'Book "{title}" has been successfully added to the library!', 'success')
+            return redirect(url_for('new_book'))
+            
+        except Exception as e:
+            flash(f'An error occurred while adding the book: {str(e)}', 'danger')
+            return render_template('new_book.html', genres=genres)
+    
+    return render_template('new_book.html', genres=genres)
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """Handle user registration."""
@@ -154,7 +243,6 @@ def login():
         # Check if user exists and password is correct
         if user and user.check_password(password):
             login_user(user)
-            flash(f'Welcome back, {user.name}!', 'success')
             
             # Redirect to next page or book titles
             next_page = request.args.get('next')
@@ -170,7 +258,6 @@ def login():
 def logout():
     """Handle user logout."""
     logout_user()
-    flash('You have been logged out successfully.', 'success')
     return redirect(url_for('book_titles'))
 
 
