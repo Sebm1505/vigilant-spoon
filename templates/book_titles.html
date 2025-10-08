@@ -27,14 +27,6 @@
             </div>
         </div>
 
-        <!-- Filter Results Alert -->
-        {% if selected_category and selected_category != 'all' %}
-            <div class="alert alert-info mb-4">
-                <strong>Filtered Results:</strong> Showing {{ books|length }} books in the "{{ selected_category|title }}" category.
-                <a href="{{ url_for('book_titles') }}" class="alert-link">Show all books</a>
-            </div>
-        {% endif %}
-
         <!-- Book Cards -->
         {% if books %}
             <div class="row g-4">
