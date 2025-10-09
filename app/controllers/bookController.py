@@ -82,17 +82,23 @@ def new_book():
             flash('Please fill in all required fields.', 'danger')
             return render_template('new_book.html', genres=genres, panel="Add a Book")
         
-        # Process authors (up to 5)
+        # BONUS: Process authors from textarea (unlimited number)
+        authors_text = request.form.get('authors_text', '').strip()
         authors = []
-        for i in range(1, 6):
-            author_name = request.form.get(f'author{i}', '').strip()
-            is_illustrator = request.form.get(f'illustrator{i}') == 'yes'
+        
+        if authors_text:
+            # Split by newlines and process each line
+            author_lines = [line.strip() for line in authors_text.split('\n') if line.strip()]
             
-            if author_name:
-                if is_illustrator:
-                    authors.append(f"{author_name} (Illustrator)")
+            for line in author_lines:
+                # Check if already marked as illustrator
+                if '(Illustrator)' in line or '(illustrator)' in line:
+                    # Already has illustrator marker, just clean it up
+                    author_name = line.replace('(illustrator)', '(Illustrator)')
+                    authors.append(author_name.strip())
                 else:
-                    authors.append(author_name)
+                    # Regular author
+                    authors.append(line.strip())
         
         # Validate at least one author
         if not authors:
@@ -117,7 +123,7 @@ def new_book():
                 copies=copies
             )
             
-            flash(f'Book "{title}" has been successfully added to the library!', 'success')
+            flash(f'Book "{title}" has been successfully added to the library with {len(authors)} author(s)!', 'success')
             return redirect(url_for('bookController.new_book'))
             
         except Exception as e:
