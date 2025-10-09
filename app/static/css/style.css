@@ -164,7 +164,7 @@ body {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
-    margin-bottom: 30px; /* Add spacing between cards */
+    margin-bottom: 30px;
 }
 
 .book-cover {
@@ -172,7 +172,7 @@ body {
     height: auto;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    margin-right: 20px; /* Add space between image and content */
+    margin-right: 20px;
 }
 
 .book-info {
@@ -213,29 +213,14 @@ body {
     position: absolute;
     bottom: 25px;
     right: 25px;
-}
-
-.form-control:focus {
-    border-color: #66bb6a !important;
-    box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2) !important;
-    outline: none;
-}
-
-.form-control[multiple] option:checked {
-    background-color: #66bb6a;
-    color: white;
-}
-
-code {
-    background-color: #f0f0f0;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 0.9em;
+    display: flex;
+    gap: 10px;
 }
 
 /* Buttons */
 .more-details-btn,
-.back-btn {
+.back-btn,
+.make-loan-btn {
     background: #28a745 !important;
     color: white !important;
     border: none;
@@ -250,7 +235,8 @@ code {
 }
 
 .more-details-btn:hover,
-.back-btn:hover {
+.back-btn:hover,
+.make-loan-btn:hover {
     background: #218838 !important;
     color: white !important;
     transform: translateY(-2px);
@@ -308,29 +294,22 @@ code {
     border-radius: 8px;
 }
 
-/* Mobile Toggle Button */
-.mobile-menu-toggle {
-    display: none;
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 1070;
-    background: white;
-    border: 2px solid #ddd;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.form-control:focus {
+    border-color: #66bb6a !important;
+    box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2) !important;
+    outline: none;
 }
 
-.mobile-menu-toggle .navbar-toggler-icon {
-    display: inline-block;
-    width: 30px;
-    height: 24px;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.7)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='3' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100%;
+.form-control[multiple] option:checked {
+    background-color: #66bb6a;
+    color: white;
+}
+
+code {
+    background-color: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
 }
 
 /* Tablet/Small screens - keep book cards horizontal */
@@ -353,6 +332,14 @@ code {
         position: absolute;
         bottom: 15px;
         right: 15px;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .make-loan-btn,
+    .more-details-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
     }
 }
 
@@ -362,38 +349,15 @@ code {
         padding-top: 60px !important;
     }
     
-    /* Show mobile toggle button */
-    .mobile-menu-toggle {
-        display: block !important;
-    }
-
-    /* BLACK border highlight ONLY when menu is active */
-    body.menu-active .mobile-menu-toggle {
-        border: 2px solid #000000 !important;
-        background-color: #f5f5f5;
-        outline: none;
-    }
-    
-    /* Remove black border on active/focus states when menu is not active */
-    .mobile-menu-toggle:active,
-    .mobile-menu-toggle:focus {
-        outline: none;
-    }
-    
-    /* Container for sidebar and navbar - pushes content down */
+    /* Container for sidebar and navbar */
     .mobile-menu-container {
         position: relative;
         width: 100%;
         z-index: 1060;
         margin-top: 25px;
-        display: none;
     }
     
-    .mobile-menu-container.show {
-        display: block;
-    }
-    
-    /* Sidebar with dynamic height - auto-adjusts to content */
+    /* Sidebar with dynamic height */
     .sidebar {
         display: block !important;
         background: url('https://library.suss.edu.sg/wp-content/uploads/2023/11/Study-Space_High-table-2-cropped-300x200.png') !important;
@@ -415,7 +379,7 @@ code {
         visibility: hidden;
     }
     
-    /* Top navbar appears immediately after sidebar - NO gap */
+    /* Top navbar appears immediately after sidebar */
     .top-navbar {
         display: block !important;
         position: relative;
@@ -430,20 +394,20 @@ code {
         visibility: hidden;
     }
     
-    /* Show sidebar and navbar with slide-in animation */
-    .mobile-menu-container.show .sidebar {
+    /* Show sidebar and navbar with slide-in animation when checkbox is checked */
+    #mobile-menu-checkbox:checked ~ .mobile-menu-container .sidebar {
         transform: translateY(0);
         opacity: 1;
         visibility: visible;
     }
     
-    .mobile-menu-container.show .top-navbar {
+    #mobile-menu-checkbox:checked ~ .mobile-menu-container .top-navbar {
         transform: translateY(0);
         opacity: 1;
         visibility: visible;
     }
     
-    /* Main content - no margin needed, pushed down naturally */
+    /* Main content */
     .main-content {
         margin-left: 0;
         width: 100%;
@@ -470,6 +434,8 @@ code {
     .book-actions {
         bottom: 15px;
         right: 15px;
+        flex-direction: column;
+        gap: 8px;
     }
     
     .book-title,
@@ -500,8 +466,16 @@ code {
     .book-actions {
         position: static !important;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
         margin-top: 15px;
+    }
+    
+    .make-loan-btn,
+    .more-details-btn {
+        width: 100%;
+        max-width: 250px;
     }
     
     .category-select {

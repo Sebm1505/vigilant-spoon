@@ -45,9 +45,20 @@
             </div>
         </div>
 
-        <!-- Back Button -->
+        <!-- Action Buttons -->
         <div class="text-right">
-            <a href="{{ url_for('bookController.book_titles') }}" class="btn btn-success back-btn">Back to Book Titles
+            {% if book.available > 0 %}
+            <!-- Make a Loan Button (only if available copies exist) -->
+            <a href="{{ url_for('bookController.make_loan', book_id=book.id) }}" 
+               class="btn btn-success make-loan-btn mr-2">
+                Make a Loan
+            </a>
+            {% endif %}
+            
+            <!-- Back Button -->
+            <a href="{{ url_for('bookController.book_titles') }}" 
+               class="btn btn-success back-btn">
+                Back to Book Titles
             </a>
         </div>
     </div>

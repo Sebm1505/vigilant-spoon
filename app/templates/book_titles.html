@@ -63,8 +63,17 @@
                                 </div>
                             </div>
 
-                            <!-- More Details Button -->
+                            <!-- Action Buttons -->
                             <div class="book-actions">
+                                {% if book.available > 0 %}
+                                <!-- Make a Loan Button (only if available copies exist) -->
+                                <a href="{{ url_for('bookController.make_loan', book_id=book.id) }}" 
+                                   class="btn btn-success make-loan-btn">
+                                    Make a Loan
+                                </a>
+                                {% endif %}
+                                
+                                <!-- More Details Button -->
                                 <a href="{{ url_for('bookController.book_details', book_id=book.id) }}" 
                                    class="btn btn-success more-details-btn">
                                     More Details
