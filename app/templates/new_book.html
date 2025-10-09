@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Add a Book - E-Library{% endblock %}
+
+{% block page_title %}Add a Book{% endblock %}
+
+{% block mainblock %}
+    <div class="col-12">
+        <!-- Add Book Form Card -->
+        <div class="card book-card mb-4" style="max-width: 900px; padding: 0;">
+            <div class="card-body p-0">
+                <!-- Form Header -->
+                <div style="background-color: #e7e7e7; padding: 20px 25px; border-bottom: 2px solid #e7e7e7; margin: 0;">
+                    <h2 class="mb-0" style="color: #000000">ADD A BOOK</h2>
+                </div>
+                
+                <!-- Form Content -->
+                <div style="padding: 25px;">
+                    <form method="POST" action="{{ url_for('new_book') }}">
+                        <!-- Genres (Multiple Selection) -->
+                        <div class="form-group row">
+                            <label for="genres" class="col-sm-3 col-form-label" style="color: #555; font-weight: 500;">Choose multiple Genres:</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" 
+                                        id="genres" 
+                                        name="genres" 
+                                        multiple 
+                                        size="6"
+                                        style="border: 2px solid #ddd; border-radius: 6px;"
+                                        required>
+                                    {% for genre in genres %}
+                                    <option value="{{ genre }}">{{ genre }}</option>
+                                    {% endfor %}
+                                </select>
+                                <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple genres</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Title -->
+                        <div class="form-group row">
+                            <label for="title" class="col-sm-3 col-form-label" style="color: #555; font-weight: 500;">Title:</label>
+                            <div class="col-sm-9">
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="title" 
+                                       name="title" 
+                                       style="border: 2px solid #ddd; border-radius: 6px; padding: 12px;"
+                                       required>
+                            </div>
+                        </div>
+                        
+                        <!-- Category -->
+                        <div class="form-group row">
+                            <label for="category" class="col-sm-3 col-form-label" style="color: #555; font-weight: 500;">Choose a category:</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" 
+                                        id="category" 
+                                        name="category"
+                                        style="border: 2px solid #ddd; border-radius: 6px; padding: 12px;"
+                                        required>
+                                    <option value="">Select a category</option>
+                                    <option value="Children">Children</option>
+                                    <option value="Teens">Teens</option>
+                                    <option value="Adult">Adult</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- URL for Cover -->
+                        <div class="form-group row">
+                            <label for="url" class="col-sm-3 col-form-label" style="color: #555; font-weight: 500;">URL for Cover:</label>
+                            <div class="col-sm-9">
+                                <input type="url" 
+                                       class="form-control" 
+                                       id="url" 
+                                       name="url" 
+                                       style="border: 2px solid #ddd; border-radius: 6px; padding: 12px;"
+                                       required>
+                            </div>
+                        </div>
+                        
+                        <!-- Description -->
+                        <div class="form-group row">
+                            <label for="description" class="col-sm-3 col-form-label" style="color: #555; font-weight: 500;">Description:</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" 
+                                          id="description" 
+                                          name="description" 
+                                          rows="8"
+                                          style="border: 2px solid #ddd; border-radius: 6px; padding: 12px;"
+                                          required></textarea>
+                                <small class="text-muted">Use double line breaks to separate paragraphs</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Authors (up to 5) -->
+                        {% for i in range(1, 6) %}
+                        <div class="form-group row">
+                            <label for="author{{ i }}" class="col-sm-3 col-form-label" style="color: #555; font-weight: 500;">Author {{ i }}:</label>
+                            <div class="col-sm-7">
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="author{{ i }}" 
+                                       name="author{{ i }}" 
+                                       style="border: 2px solid #ddd; border-radius: 6px; padding: 12px;"
+                                       {% if i == 1 %}required{% endif %}>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-check" style="padding-top: 12px;">
+                                    <input class="form-check-input" 
+                                           type="checkbox" 
+                                           id="illustrator{{ i }}" 
+                                           name="illustrator{{ i }}"
+                                           value="yes">
+                                    <label class="form-check-label" for="illustrator{{ i }}" style="color: #555;">
+                                        Illustrator
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <!-- Number of Pages -->
+                        <div class="form-group row">
+                            <label for="pages" class="col-sm-3 col-form-label" style="color: #555; font-weight: 500;">Number of pages:</label>
+                            <div class="col-sm-9">
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="pages" 
+                                       name="pages" 
+                                       min="1"
+                                       style="border: 2px solid #ddd; border-radius: 6px; padding: 12px;"
+                                       required>
+                            </div>
+                        </div>
+                        
+                        <!-- Number of Copies -->
+                        <div class="form-group row mb-4">
+                            <label for="copies" class="col-sm-3 col-form-label" style="color: #555; font-weight: 500;">Number of copies:</label>
+                            <div class="col-sm-9">
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="copies" 
+                                       name="copies" 
+                                       min="1"
+                                       style="border: 2px solid #ddd; border-radius: 6px; padding: 12px;"
+                                       required>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-success submit-btn" style="display: inline-block; width: auto; padding: 12px 40px;">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .form-control:focus {
+            border-color: #66bb6a !important;
+            box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2) !important;
+            outline: none;
+        }
+        
+        .form-control[multiple] option:checked {
+            background-color: #66bb6a;
+            color: white;
+        }
+    </style>
+{% endblock %}
