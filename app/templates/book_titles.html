@@ -65,8 +65,8 @@
 
                             <!-- Action Buttons -->
                             <div class="book-actions">
-                                {% if book.available > 0 and current_user.is_authenticated and not current_user.is_admin %}
-                                <!-- Make a Loan Button (only if available copies exist and user is non-admin) -->
+                                {% if book.available > 0 and current_user.is_authenticated %}
+                                <!-- Make a Loan Button (only if available copies exist and user is authenticated) -->
                                 <a href="{{ url_for('bookController.make_loan', book_id=book.id) }}" 
                                    class="btn btn-success make-loan-btn">
                                     Make a Loan
