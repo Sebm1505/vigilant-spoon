@@ -57,9 +57,19 @@ def book_details(book_id):
 @book.route('/make-loan/<book_id>', methods=['GET', 'POST'])
 @login_required
 def make_loan(book_id):
-    """Handle making a loan for a book (to be implemented in part c)."""
-    # TODO: Implement loan functionality in part (c)
-    flash('Make a Loan functionality will be implemented in part (c).', 'info')
+    """Handle making a loan for a book."""
+    book_doc = Book.get_book_by_id(book_id)
+    if not book_doc:
+        flash("Book not found.", "danger")
+        return redirect(url_for('bookController.book_titles'))
+    
+    # Try to borrow the book
+    success, message = book_doc.borrow_book()
+    if success:
+        flash(message, "success")
+    else:
+        flash(message, "danger")
+    
     return redirect(url_for('bookController.book_details', book_id=book_id))
 
 

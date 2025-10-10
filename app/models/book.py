@@ -77,6 +77,73 @@ class Book(db.Document):
         book.save()
         return book
     
+    def borrow_book(self):
+        """
+        Borrow a book by decreasing the available count.
+        
+        Returns:
+            tuple: (success: bool, message: str)
+        """
+        # Sanity check: Ensure there are available copies to borrow
+        if self.available <= 0:
+            return False, "No available copies to borrow. All copies are currently on loan."
+        
+        # Decrease available count
+        self.available -= 1
+        self.save()
+        
+        return True, f"Successfully borrowed '{self.title}'. {self.available} copies remaining."
+    
+    def return_book(self):
+        """
+        Return a book by increasing the available count.
+        
+        Returns:
+            tuple: (success: bool, message: str)
+        """
+        # Sanity check: Ensure the book was previously borrowed
+        # (available count should be less than total copies)
+        if self.available >= self.copies:
+            return False, f"Cannot return '{self.title}'. All copies are already in the library."
+        
+        # Sanity check: Ensure available doesn't exceed copies
+        if self.available < 0:
+            # This shouldn't happen, but handle it gracefully
+            self.available = 0
+        
+        # Increase available count
+        self.available += 1
+        self.save()
+        
+        return True, f"Successfully returned '{self.title}'. {self.available} of {self.copies} copies now available."
+    
+    def can_borrow(self):
+        """
+        Check if the book can be borrowed.
+        
+        Returns:
+            bool: True if there are available copies, False otherwise
+        """
+        return self.available > 0
+    
+    def can_return(self):
+        """
+        Check if the book can be returned.
+        
+        Returns:
+            bool: True if at least one copy is borrowed, False otherwise
+        """
+        return self.available < self.copies
+    
+    def get_borrowed_count(self):
+        """
+        Get the number of copies currently borrowed.
+        
+        Returns:
+            int: Number of borrowed copies
+        """
+        return self.copies - self.available
+    
     def get_author_string(self):
         """Get authors as a comma-separated string."""
         return ", ".join(self.authors)
@@ -122,10 +189,13 @@ class Book(db.Document):
             'pages': self.pages,
             'copies': self.copies,
             'available': self.available,
+            'borrowed': self.get_borrowed_count(),
             'cover_image': self.url,
             'description': self.get_full_description(),
             'description_preview': self.get_description_preview(),
-            'formatted_description': self.get_full_description()
+            'formatted_description': self.get_full_description(),
+            'can_borrow': self.can_borrow(),
+            'can_return': self.can_return()
         }
     
     def __str__(self):
