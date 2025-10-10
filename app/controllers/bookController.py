@@ -68,11 +68,6 @@ def make_loan(book_id):
         flash('Book not found.', 'danger')
         return redirect(url_for('bookController.book_titles'))
     
-    # Check if user is admin - admins cannot make loans
-    if current_user.is_admin:
-        flash('Admin users cannot make loans.', 'danger')
-        return redirect(url_for('bookController.book_details', book_id=book_id))
-    
     if request.method == 'POST':
         # Generate random borrow date (10-20 days before today)
         days_ago = random.randint(10, 20)
