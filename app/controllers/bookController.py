@@ -101,17 +101,16 @@ def new_book():
             flash('Please fill in all required fields.', 'danger')
             return render_template('new_book.html', genres=genres, panel="Add a Book")
         
-        # Process authors (up to 5)
+        # BONUS: Process authors from textarea (unlimited number)
+        authors_text = request.form.get('authors_text', '').strip()
         authors = []
-        for i in range(1, 6):
-            author_name = request.form.get(f'author{i}', '').strip()
-            is_illustrator = request.form.get(f'illustrator{i}') == 'yes'
+        
+        if authors_text:
+            # Split by newlines and process each line
+            author_lines = [line.strip() for line in authors_text.split('\n') if line.strip()]
             
-            if author_name:
-                if is_illustrator:
-                    authors.append(f"{author_name} (Illustrator)")
-                else:
-                    authors.append(author_name)
+            for line in author_lines:
+                    authors.append(line.strip())
         
         # Validate at least one author
         if not authors:
