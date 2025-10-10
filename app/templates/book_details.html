@@ -51,16 +51,18 @@
                         Back to Book Titles
                     </a>
                     
-                    <!-- Make a Loan or Not Available Button -->
-                    {% if book.available > 0 %}
-                    <a href="{{ url_for('bookController.make_loan', book_id=book.id) }}" 
-                       class="btn btn-success make-loan-btn">
-                        Make a Loan
-                    </a>
-                    {% else %}
-                    <button class="btn btn-danger not-available-btn" disabled>
-                        Not Available
-                    </button>
+                    <!-- Make a Loan or Not Available Button (only for non-admin users) -->
+                    {% if current_user.is_authenticated and not current_user.is_admin %}
+                        {% if book.available > 0 %}
+                        <a href="{{ url_for('bookController.make_loan', book_id=book.id) }}" 
+                           class="btn btn-success make-loan-btn">
+                            Make a Loan
+                        </a>
+                        {% else %}
+                        <button class="btn btn-danger not-available-btn" disabled>
+                            Not Available
+                        </button>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

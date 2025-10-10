@@ -1,7 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from functools import wraps
+from datetime import datetime, timedelta
+import random
 from app.models.book import Book
+from app.models.loan import Loan
 
 book = Blueprint('bookController', __name__)
 
@@ -58,19 +61,147 @@ def book_details(book_id):
 @login_required
 def make_loan(book_id):
     """Handle making a loan for a book."""
+    # Get the book
     book_doc = Book.get_book_by_id(book_id)
+    
     if not book_doc:
-        flash("Book not found.", "danger")
+        flash('Book not found.', 'danger')
         return redirect(url_for('bookController.book_titles'))
     
-    # Try to borrow the book
-    success, message = book_doc.borrow_book()
-    if success:
-        flash(message, "success")
-    else:
-        flash(message, "danger")
+    # Check if user is admin - admins cannot make loans
+    if current_user.is_admin:
+        flash('Admin users cannot make loans.', 'danger')
+        return redirect(url_for('bookController.book_details', book_id=book_id))
     
-    return redirect(url_for('bookController.book_details', book_id=book_id))
+    if request.method == 'POST':
+        # Generate random borrow date (10-20 days before today)
+        days_ago = random.randint(10, 20)
+        borrow_date = datetime.now() - timedelta(days=days_ago)
+        
+        # Create the loan
+        success, message, loan = Loan.create_loan(current_user, book_doc, borrow_date)
+        
+        if success:
+            flash(message, 'success')
+            return redirect(url_for('bookController.my_loans'))
+        else:
+            flash(message, 'danger')
+            return redirect(url_for('bookController.book_details', book_id=book_id))
+    
+    # GET request - show confirmation page
+    book_dict = book_doc.to_dict()
+    return render_template('make_loan.html', book=book_dict, panel="Make a Loan")
+
+
+@book.route('/my-loans')
+@login_required
+def my_loans():
+    """Display all loans for the current user."""
+    # Get active and returned loans
+    active_loans = Loan.get_user_active_loans(current_user)
+    returned_loans = Loan.get_user_returned_loans(current_user)
+    
+    # Convert to dictionaries for template
+    active_loans_dict = [loan.to_dict() for loan in active_loans]
+    returned_loans_dict = [loan.to_dict() for loan in returned_loans]
+    
+    return render_template('my_loans.html', 
+                         active_loans=active_loans_dict,
+                         returned_loans=returned_loans_dict,
+                         panel="Current Loans")
+
+
+@book.route('/renew-loan/<loan_id>')
+@login_required
+def renew_loan(loan_id):
+    """Renew a loan."""
+    loan = Loan.get_loan_by_id(loan_id)
+    
+    if not loan:
+        flash('Loan not found.', 'danger')
+        return redirect(url_for('bookController.my_loans'))
+    
+    # Verify loan belongs to current user
+    if str(loan.member.id) != str(current_user.id):
+        flash('Unauthorized access.', 'danger')
+        return redirect(url_for('bookController.my_loans'))
+    
+    # Generate random new borrow date (10-20 days after current borrow date, but not later than today)
+    days_after = random.randint(10, 20)
+    new_borrow_date = loan.borrowDate + timedelta(days=days_after)
+    
+    # Ensure new borrow date is not later than today
+    if new_borrow_date > datetime.now():
+        new_borrow_date = datetime.now()
+    
+    # Update the loan manually
+    if loan.returnDate is not None:
+        flash("Cannot renew a loan that has already been returned.", 'danger')
+        return redirect(url_for('bookController.my_loans'))
+    
+    MAX_RENEWALS = 2  # Changed from 3 to 2 to match requirement
+    if loan.renewCount >= MAX_RENEWALS:
+        flash(f"Maximum renewal limit ({MAX_RENEWALS}) reached for '{loan.book.title}'.", 'danger')
+        return redirect(url_for('bookController.my_loans'))
+    
+    loan.renewCount += 1
+    loan.borrowDate = new_borrow_date
+    loan.save()
+    
+    flash(f"Successfully renewed '{loan.book.title}'. New borrow date: {new_borrow_date.strftime('%d %b %Y')}.", 'success')
+    return redirect(url_for('bookController.my_loans'))
+
+
+@book.route('/return-loan/<loan_id>')
+@login_required
+def return_loan(loan_id):
+    """Return a loan."""
+    loan = Loan.get_loan_by_id(loan_id)
+    
+    if not loan:
+        flash('Loan not found.', 'danger')
+        return redirect(url_for('bookController.my_loans'))
+    
+    # Verify loan belongs to current user
+    if str(loan.member.id) != str(current_user.id):
+        flash('Unauthorized access.', 'danger')
+        return redirect(url_for('bookController.my_loans'))
+    
+    # Generate random return date (10-20 days after current borrow date, but not later than today)
+    days_after = random.randint(10, 20)
+    return_date = loan.borrowDate + timedelta(days=days_after)
+    
+    # Ensure return date is not later than today
+    if return_date > datetime.now():
+        return_date = datetime.now()
+    
+    # Return the loan with the generated date
+    success, message = loan.return_loan(return_date)
+    flash(message, 'success' if success else 'danger')
+    
+    return redirect(url_for('bookController.my_loans'))
+
+
+@book.route('/delete-loan/<loan_id>')
+@login_required
+def delete_loan(loan_id):
+    """Delete a returned loan."""
+    loan = Loan.get_loan_by_id(loan_id)
+    
+    if not loan:
+        flash('Loan not found.', 'danger')
+        return redirect(url_for('bookController.my_loans'))
+    
+    # Verify loan belongs to current user
+    if str(loan.member.id) != str(current_user.id):
+        flash('Unauthorized access.', 'danger')
+        return redirect(url_for('bookController.my_loans'))
+    
+    # Delete the loan
+    success, message = loan.delete_loan()
+    flash(message, 'success' if success else 'danger')
+    
+    return redirect(url_for('bookController.my_loans'))
 
 
 @book.route('/new-book', methods=['GET', 'POST'])

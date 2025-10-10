@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Make a Loan - E-Library{% endblock %}
+
+{% block page_title %}Make a Loan{% endblock %}
+
+{% block mainblock %}
+    <div class="col-12">
+        <!-- Loan Confirmation Card -->
+        <div class="card book-card mb-4" style="max-width: 800px;">
+            <div class="card-body p-0">
+                <!-- Header -->
+                <div style="background-color: #e7e7e7; padding: 20px 25px; border-bottom: 2px solid #e7e7e7; margin: 0;">
+                    <h2 class="mb-0" style="color: #000000">Confirm Loan</h2>
+                </div>
+                
+                <!-- Content -->
+                <div style="padding: 25px;">
+                    <!-- Book Information -->
+                    <div class="row mb-4">
+                        <!-- Book Cover -->
+                        <div class="col-md-3">
+                            <img src="{{ book.cover_image }}" 
+                                 alt="Cover of {{ book.title }}" 
+                                 class="img-fluid"
+                                 style="max-width: 150px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);"
+                                 onerror="this.src='https://via.placeholder.com/150x225/cccccc/666666?text=No+Cover'">
+                        </div>
+                        
+                        <!-- Book Details -->
+                        <div class="col-md-9">
+                            <h3 class="book-title mb-2" style="color: #2d5a3d; font-size: 1.5rem;">{{ book.title }}</h3>
+                            <p class="book-author mb-3" style="color: #2d5a3d; font-size: 1.2rem;">By {{ book.author }}</p>
+                            
+                            <div class="book-meta" style="color: #666; font-size: 0.95rem; line-height: 1.6;">
+                                <strong>Category:</strong> {{ book.category }}<br>
+                                {% if book.genres %}
+                                <strong>Genres:</strong> {{ book.genres }}<br>
+                                {% endif %}
+                                {% if book.pages %}
+                                <strong>Pages:</strong> {{ book.pages }}<br>
+                                {% endif %}
+                                <strong>Available Copies:</strong> <span class="bold-number">{{ book.available }}</span> of {{ book.copies }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Confirmation Message -->
+                    <div class="alert" style="background-color: #e7f5e9; border: 2px solid #28a745; border-radius: 6px; padding: 20px; margin-bottom: 25px;">
+                        <h5 style="color: #155724; margin-bottom: 10px;">
+                            <i class="fas fa-info-circle"></i> Loan Information
+                        </h5>
+                        <p style="color: #155724; margin-bottom: 0;">
+                            You are about to borrow <strong>"{{ book.title }}"</strong>. 
+                            Please confirm to proceed with the loan.
+                        </p>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <form method="POST" action="{{ url_for('bookController.make_loan', book_id=book.id) }}">
+                        <div class="d-flex justify-content-end gap-2" style="gap: 10px;">
+                            <a href="{{ url_for('bookController.book_details', book_id=book.id) }}" 
+                               class="btn btn-secondary" 
+                               style="padding: 12px 30px; font-size: 1rem; font-weight: 600; border-radius: 6px;">
+                                Cancel
+                            </a>
+                            <button type="submit" 
+                                    class="btn btn-success" 
+                                    style="padding: 12px 30px; font-size: 1rem; font-weight: 600; border-radius: 6px; background: #28a745 !important;">
+                                Confirm Loan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .bold-number {
+            font-weight: 700;
+            color: #28a745;
+        }
+        
+        .btn-secondary {
+            background: #6c757d !important;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-success:hover {
+            background: #218838 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+        }
+    </style>
+{% endblock %}

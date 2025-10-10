@@ -319,22 +319,40 @@ body {
     border-radius: 8px;
 }
 
-.form-control:focus {
-    border-color: #66bb6a !important;
-    box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2) !important;
-    outline: none;
+/* Mobile Toggle Button */
+.mobile-menu-toggle-label {
+    display: none;
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1070;
+    background: white;
+    border: 2px solid #ddd;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.form-control[multiple] option:checked {
-    background-color: #66bb6a;
-    color: white;
+.navbar-toggler-icon {
+    display: inline-block;
+    width: 30px;
+    height: 24px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.7)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='3' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
 }
 
-code {
-    background-color: #f0f0f0;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 0.9em;
+/* Hide checkbox */
+#mobile-menu-checkbox {
+    display: none;
+}
+
+/* Black border when menu is active */
+#mobile-menu-checkbox:checked + .mobile-menu-toggle-label {
+    border: 2px solid #000000;
+    background-color: #f5f5f5;
 }
 
 /* Tablet/Small screens - keep book cards horizontal */
@@ -368,9 +386,14 @@ code {
     }
     
     /* Book Details buttons on tablet */
-    .back-btn,
-    .make-loan-btn,
-    .not-available-btn {
+    .book-details-actions {
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .book-details-actions .back-btn,
+    .book-details-actions .make-loan-btn,
+    .book-details-actions .not-available-btn {
         padding: 10px 20px;
         font-size: 0.95rem;
     }
@@ -380,6 +403,11 @@ code {
 @media (max-width: 768px) {
     body {
         padding-top: 60px !important;
+    }
+    
+    /* Show mobile toggle button */
+    .mobile-menu-toggle-label {
+        display: block !important;
     }
     
     /* Container for sidebar and navbar */
@@ -453,6 +481,7 @@ code {
     /* Book cards on mobile */
     .book-card {
         padding: 20px;
+        padding-bottom: 100px !important; /* Extra space for buttons */
     }
     
     .book-info {
@@ -474,6 +503,14 @@ code {
     .book-title,
     .book-author {
         font-size: 1.2rem;
+    }
+    
+    /* Book Details page on mobile */
+    .book-details-actions {
+        bottom: 15px;
+        right: 15px;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 }
 
@@ -516,15 +553,19 @@ code {
         max-width: 100%;
     }
     
-    /* Book Details page buttons on mobile - stack vertically */
-    .d-flex.justify-content-between {
-        flex-direction: column !important;
+    /* Book Details page buttons on mobile - stack vertically, centered */
+    .book-details-actions {
+        position: static !important;
+        flex-direction: column;
         gap: 10px;
+        margin-top: 20px;
+        text-align: center;
+        justify-content: center;
     }
     
-    .back-btn,
-    .make-loan-btn,
-    .not-available-btn {
+    .book-details-actions .back-btn,
+    .book-details-actions .make-loan-btn,
+    .book-details-actions .not-available-btn {
         width: 100% !important;
         max-width: 100%;
     }

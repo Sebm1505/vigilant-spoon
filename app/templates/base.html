@@ -18,13 +18,65 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
     <title>{% block title %}E-Library{% endblock %}</title>
+    
+    <style>
+        /* Hide checkbox */
+        #mobile-menu-checkbox {
+            display: none;
+        }
+        
+        /* Mobile menu toggle button styling */
+        .mobile-menu-toggle-label {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1070;
+            background: white;
+            border: 2px solid #ddd;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Show on mobile */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle-label {
+                display: block;
+            }
+            
+            body {
+                padding-top: 60px;
+            }
+        }
+        
+        /* Black border when menu is active */
+        #mobile-menu-checkbox:checked + .mobile-menu-toggle-label {
+            border: 2px solid #000000;
+            background-color: #f5f5f5;
+        }
+        
+        /* Hide mobile menu by default */
+        .mobile-menu-container {
+            display: none;
+        }
+        
+        /* Show menu when checkbox is checked */
+        #mobile-menu-checkbox:checked ~ .mobile-menu-container {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Mobile menu toggle button (fixed at top) -->
-    <button class="mobile-menu-toggle d-md-none" type="button" aria-label="Toggle navigation menu" id="mobileToggle">
+    <!-- Hidden checkbox for toggle state -->
+    <input type="checkbox" id="mobile-menu-checkbox" class="d-md-none">
+    
+    <!-- Mobile menu toggle button (label for checkbox) -->
+    <label for="mobile-menu-checkbox" class="mobile-menu-toggle-label d-md-none">
         <span class="navbar-toggler-icon"></span>
-    </button>
+    </label>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-md navbar-light d-none d-md-block">
@@ -34,14 +86,23 @@
                 <div class="col-xl-2 col-lg-3 col-md-4 sidebar fixed-top d-none d-md-block">
                     <a href="#" class="navbar-brand text-white d-block mx-auto text-center py-3 bottom-border">SG Library</a>
                     
-                    {% if current_user.is_authenticated and current_user.is_admin %}
-                    <!-- Admin profile -->
+                    {% if current_user.is_authenticated %}
+                    <!-- User profile (for both admin and regular users) -->
                     <div class="navbar-brand d-block mx-auto text-left py-3 mb-4 bottom-border">
+                        {% if current_user.is_admin %}
                         <img src="{{ url_for('static', filename='img/admin.jpeg') }}" 
                              class="oblong-img" 
                              style="width: 60px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover;" 
                              alt="Admin Image">  
                         <span style="color: white; font-size:medium;">Admin</span>
+                        {% else %}
+                        <img src="{{ url_for('static', filename='img/admin.jpeg') }}" 
+                             class="oblong-img" 
+                             style="width: 60px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover; background-color: white;" 
+                             alt="User Image"
+                             onerror="this.style.display='none'">  
+                        <span style="color: white; font-size:medium;">{{ current_user.name }}</span>
+                        {% endif %}
                     </div>
                     {% endif %}
                     
@@ -51,6 +112,15 @@
                                 <i class="fas fa-address-card text-light fa-lg mr-2"></i>Book Titles
                             </a>
                         </li>
+                        
+                        <!-- My Loans link (only show for authenticated non-admin users) -->
+                        {% if current_user.is_authenticated and not current_user.is_admin %}
+                        <li class="nav-item" style="padding: 10px;">
+                            <a href="{{ url_for('bookController.my_loans') }}" class="nav-link text-white">
+                                <i class="fas fa-clipboard text-light fa-lg mr-2"></i>Loans
+                            </a>
+                        </li>
+                        {% endif %}
                         
                         <!-- New Book link (only show for admin users) -->
                         {% if current_user.is_authenticated and current_user.is_admin %}
@@ -81,7 +151,7 @@
                 <!-- Desktop Top navbar (hidden on mobile) -->
                 <div class="col-xl-10 col-lg-9 col-md-8 ml-auto top-navbar fixed-top py-2 d-none d-md-block">
                     <div class="row align-items-center">
-                        <div class="col-md-4">
+                        <div class="col-md-4 d-flex align-items-center">
                             <h4 class="text-uppercase mb-0" style="color: #2d5016; font-weight: 600;">{% block page_title %}Library{% endblock %}</h4>
                         </div>
                         <div class="col-md-8 text-right">
@@ -108,14 +178,23 @@
         <div class="sidebar mobile-sidebar">
             <a href="#" class="navbar-brand text-white d-block mx-auto text-center py-3 mb-4 bottom-border">SG Library</a>
             
-            {% if current_user.is_authenticated and current_user.is_admin %}
-            <!-- Admin profile -->
+            {% if current_user.is_authenticated %}
+            <!-- User profile (for both admin and regular users) -->
             <div class="navbar-brand d-block mx-auto text-center py-3 mb-4 bottom-border">
+                {% if current_user.is_admin %}
                 <img src="{{ url_for('static', filename='img/admin.jpeg') }}" 
                      class="oblong-img" 
                      style="width: 60px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover;" 
                      alt="Admin Image">  
                 <span style="color: white; font-size: x-large;">Admin</span>
+                {% else %}
+                <img src="{{ url_for('static', filename='img/user-default.png') }}" 
+                     class="oblong-img" 
+                     style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px; object-fit: cover; background-color: white;" 
+                     alt="User Image"
+                     onerror="this.style.display='none'">  
+                <span style="color: white; font-size: x-large;">{{ current_user.name }}</span>
+                {% endif %}
             </div>
             {% endif %}
             
@@ -125,6 +204,15 @@
                         <i class="fas fa-address-card text-light fa-lg mr-2"></i>Book Titles
                     </a>
                 </li>
+                
+                <!-- My Loans link (only show for authenticated non-admin users) -->
+                {% if current_user.is_authenticated and not current_user.is_admin %}
+                <li class="nav-item" style="padding: 10px;">
+                    <a href="{{ url_for('bookController.my_loans') }}" class="nav-link text-white">
+                        <i class="fas fa-clipboard text-light fa-lg mr-2"></i>Loans
+                    </a>
+                </li>
+                {% endif %}
                 
                 <!-- New Book link (only show for admin users) -->
                 {% if current_user.is_authenticated and current_user.is_admin %}
@@ -154,8 +242,25 @@
         <!-- Mobile Top Navbar (immediately follows sidebar) -->
         <div class="top-navbar mobile-top-navbar">
             <div class="row align-items-center">
-                <div class="col-6 text-left">
-                    <h4 class="text-uppercase mb-0">{{ self.page_title() }}</h4>
+                <div class="col-6 text-left d-flex align-items-center">
+                    {% if current_user.is_authenticated %}
+                    <!-- User Profile aligned to left -->
+                    <div class="d-flex align-items-center mr-2">
+                        {% if current_user.is_admin %}
+                        <img src="{{ url_for('static', filename='img/admin.jpeg') }}" 
+                             style="width: 30px; height: 20px; border-radius: 50%; margin-right: 6px; object-fit: cover;" 
+                             alt="Admin">
+                        <span style="color: #2d5016; font-weight: 600; font-size: 0.9rem;">Admin</span>
+                        {% else %}
+                        <img src="{{ url_for('static', filename='img/user-default.png') }}" 
+                             style="width: 30px; height: 30px; border-radius: 50%; margin-right: 6px; object-fit: cover; background-color: white;" 
+                             alt="User"
+                             onerror="this.style.display='none'">
+                        <span style="color: #2d5016; font-weight: 600; font-size: 0.9rem;">{{ current_user.name }}</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    <h4 class="text-uppercase mb-0" style="font-size: 1rem;">{{ self.page_title() }}</h4>
                 </div>
                 <div class="col-6 text-end">
                     {% if current_user.is_authenticated %}
@@ -216,53 +321,6 @@
         integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
         crossorigin="anonymous"></script>
 
-    <!-- Mobile Menu Toggle Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.getElementById('mobileToggle');
-            const menuContainer = document.getElementById('mobileMenuContainer');
-            const body = document.body;
-            
-            if (toggleBtn && menuContainer) {
-                // Toggle menu on button click
-                toggleBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const isOpen = menuContainer.classList.contains('show');
-                    
-                    if (isOpen) {
-                        // Closing menu
-                        menuContainer.classList.remove('show');
-                        body.classList.remove('menu-active');
-                    } else {
-                        // Opening menu
-                        menuContainer.classList.add('show');
-                        body.classList.add('menu-active');
-                    }
-                    
-                    // Remove focus from button to prevent stuck border
-                    toggleBtn.blur();
-                });
-                
-                // Close menu when clicking outside
-                document.addEventListener('click', function(event) {
-                    const isClickInsideMenu = menuContainer.contains(event.target);
-                    const isClickInsideToggle = toggleBtn.contains(event.target);
-                    
-                    if (!isClickInsideMenu && !isClickInsideToggle && menuContainer.classList.contains('show')) {
-                        menuContainer.classList.remove('show');
-                        body.classList.remove('menu-active');
-                    }
-                });
-                
-                // Close menu when window is resized to desktop size
-                window.addEventListener('resize', function() {
-                    if (window.innerWidth > 768 && menuContainer.classList.contains('show')) {
-                        menuContainer.classList.remove('show');
-                        body.classList.remove('menu-active');
-                    }
-                });
-            }
-        });
-    </script>
+
 </body>
 </html>
