@@ -188,9 +188,9 @@
                      alt="Admin Image">  
                 <span style="color: white; font-size: x-large;">Admin</span>
                 {% else %}
-                <img src="{{ url_for('static', filename='img/user-default.png') }}" 
+                <img src="{{ url_for('static', filename='img/admin.jpeg') }}" 
                      class="oblong-img" 
-                     style="width: 60px; height: 60px; border-radius: 50%; margin-right: 10px; object-fit: cover; background-color: white;" 
+                     style="width: 60px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover; background-color: white;" 
                      alt="User Image"
                      onerror="this.style.display='none'">  
                 <span style="color: white; font-size: x-large;">{{ current_user.name }}</span>
@@ -275,7 +275,7 @@
     <!-- End of mobile menu container -->
 
     <!-- Flash messages display -->
-    <div class="container-fluid mt-0">
+    <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-xl-10 col-lg-9 col-md-8 ml-auto">
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -303,7 +303,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xl-10 col-lg-9 col-md-8 ml-auto main-content">
-                    <div class="row pt-md-5 mt-md-3 mb-5">
+                    <div class="row mt-md-3 mb-5">
                         {% block mainblock %}
                         {% endblock %}
                     </div>
