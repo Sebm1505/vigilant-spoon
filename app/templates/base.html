@@ -18,55 +18,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
     <title>{% block title %}E-Library{% endblock %}</title>
-    
-    <style>
-        /* Hide checkbox */
-        #mobile-menu-checkbox {
-            display: none;
-        }
-        
-        /* Mobile menu toggle button styling */
-        .mobile-menu-toggle-label {
-            display: none;
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 1070;
-            background: white;
-            border: 2px solid #ddd;
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Show on mobile */
-        @media (max-width: 768px) {
-            .mobile-menu-toggle-label {
-                display: block;
-            }
-            
-            body {
-                padding-top: 60px;
-            }
-        }
-        
-        /* Black border when menu is active */
-        #mobile-menu-checkbox:checked + .mobile-menu-toggle-label {
-            border: 2px solid #000000;
-            background-color: #f5f5f5;
-        }
-        
-        /* Hide mobile menu by default */
-        .mobile-menu-container {
-            display: none;
-        }
-        
-        /* Show menu when checkbox is checked */
-        #mobile-menu-checkbox:checked ~ .mobile-menu-container {
-            display: block;
-        }
-    </style>
 </head>
 
 <body>
@@ -176,25 +127,17 @@
     <div class="mobile-menu-container d-md-none" id="mobileMenuContainer">
         <!-- Mobile Sidebar -->
         <div class="sidebar mobile-sidebar">
-            <a href="#" class="navbar-brand text-white d-block mx-auto text-center py-3 mb-4 bottom-border">SG Library</a>
+            <a href="#" class="navbar-brand text-white d-block mx-auto text-center bottom-border">SG Library</a>
             
             {% if current_user.is_authenticated %}
             <!-- User profile (for both admin and regular users) -->
-            <div class="navbar-brand d-block mx-auto text-center py-3 mb-4 bottom-border">
-                {% if current_user.is_admin %}
-                <img src="{{ url_for('static', filename='img/admin.jpeg') }}" 
-                     class="oblong-img" 
-                     style="width: 60px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover;" 
-                     alt="Admin Image">  
-                <span style="color: white; font-size: x-large;">Admin</span>
-                {% else %}
+            <div class="navbar-brand d-block mx-auto text-left px-3 py-3 bottom-border">
                 <img src="{{ url_for('static', filename='img/admin.jpeg') }}" 
                      class="oblong-img" 
                      style="width: 60px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover; background-color: white;" 
                      alt="User Image"
                      onerror="this.style.display='none'">  
-                <span style="color: white; font-size: x-large;">{{ current_user.name }}</span>
-                {% endif %}
+                <span style="color: white; font-size:  medium;">{{ current_user.name }}</span>
             </div>
             {% endif %}
             
@@ -243,26 +186,9 @@
         <div class="top-navbar mobile-top-navbar">
             <div class="row align-items-center">
                 <div class="col-6 text-left d-flex align-items-center">
-                    {% if current_user.is_authenticated %}
-                    <!-- User Profile aligned to left -->
-                    <div class="d-flex align-items-center mr-2">
-                        {% if current_user.is_admin %}
-                        <img src="{{ url_for('static', filename='img/admin.jpeg') }}" 
-                             style="width: 30px; height: 20px; border-radius: 50%; margin-right: 6px; object-fit: cover;" 
-                             alt="Admin">
-                        <span style="color: #2d5016; font-weight: 600; font-size: 0.9rem;">Admin</span>
-                        {% else %}
-                        <img src="{{ url_for('static', filename='img/user-default.png') }}" 
-                             style="width: 30px; height: 30px; border-radius: 50%; margin-right: 6px; object-fit: cover; background-color: white;" 
-                             alt="User"
-                             onerror="this.style.display='none'">
-                        <span style="color: #2d5016; font-weight: 600; font-size: 0.9rem;">{{ current_user.name }}</span>
-                        {% endif %}
-                    </div>
-                    {% endif %}
                     <h4 class="text-uppercase mb-0" style="font-size: 1rem;">{{ self.page_title() }}</h4>
                 </div>
-                <div class="col-6 text-end">
+                <div class="col-6 text-right">
                     {% if current_user.is_authenticated %}
                     <a href="{{ url_for('auth.logout') }}" class="nav-link text-dark d-inline-block" style="font-weight: 600;">
                         <i class="fas fa-sign-out-alt text-dark fa-lg mr-2"></i>

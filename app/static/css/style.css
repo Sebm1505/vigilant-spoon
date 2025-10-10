@@ -307,6 +307,15 @@ body {
     align-items: center;
 }
 
+.book-details-card {
+    position: relative;
+    padding-bottom: 80px;
+}
+
+.book-details-cover-col {
+    max-width: 200px;
+}
+
 .bold-number {
     font-weight: 700;
 }
@@ -317,6 +326,191 @@ body {
     border: 1px solid #bee5eb !important;
     color: #0c5460 !important;
     border-radius: 8px;
+}
+
+/* Form Styles */
+.form-card {
+    max-width: 600px;
+    padding: 0;
+}
+
+.form-card-wide {
+    max-width: 900px;
+    padding: 0;
+}
+
+.form-header {
+    background-color: #e7e7e7;
+    padding: 20px 25px;
+    border-bottom: 2px solid #e7e7e7;
+    margin: 0;
+}
+
+.form-header h2 {
+    margin-bottom: 0;
+    color: #000000;
+}
+
+.form-content {
+    padding: 25px;
+}
+
+.form-label {
+    color: #555;
+    font-weight: 500;
+}
+
+.form-control-styled {
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.form-control-styled:focus,
+.form-control:focus {
+    border-color: #66bb6a !important;
+    box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2) !important;
+    outline: none;
+}
+
+.submit-btn {
+    display: inline-block;
+    width: auto;
+    padding: 12px 40px;
+}
+
+/* Loan Confirmation Styles */
+.loan-card {
+    max-width: 800px;
+}
+
+.loan-book-cover {
+    max-width: 150px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.loan-info-alert {
+    background-color: #e7f5e9;
+    border: 2px solid #28a745;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.loan-info-alert h5 {
+    color: #155724;
+    margin-bottom: 10px;
+}
+
+.loan-info-alert p {
+    color: #155724;
+    margin-bottom: 0;
+}
+
+.btn-secondary-styled {
+    background: #6c757d !important;
+    border: none;
+    transition: all 0.3s ease;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.btn-secondary-styled:hover {
+    background: #5a6268 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-success-styled {
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    background: #28a745 !important;
+}
+
+.btn-success-styled:hover {
+    background: #218838 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+}
+
+/* Loans Table Styles */
+.loans-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.loans-table thead {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.loans-table th {
+    padding: 15px;
+    color: #2d5a3d;
+    font-weight: 600;
+}
+
+.loans-table td {
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.loan-book-info {
+    display: flex;
+    align-items: start;
+    gap: 15px;
+}
+
+.loan-book-cover-sm {
+    width: 50px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.loan-book-text .title {
+    font-weight: 600;
+    color: #2d5a3d;
+    margin-bottom: 4px;
+}
+
+.loan-book-text .author {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.loan-date {
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.loan-date-empty {
+    font-size: 0.95rem;
+    color: #999;
+}
+
+.loan-renew-count {
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.returned-row {
+    opacity: 0.85;
+}
+
+.no-loan-message {
+    text-align: left;
+    color: #666;
+    font-size: large;
+    margin: 0;
 }
 
 /* Mobile Toggle Button */
@@ -353,6 +547,56 @@ body {
 #mobile-menu-checkbox:checked + .mobile-menu-toggle-label {
     border: 2px solid #000000;
     background-color: #f5f5f5;
+}
+
+/* Hide mobile menu by default */
+.mobile-menu-container {
+    display: none;
+}
+
+/* Show menu when checkbox is checked */
+#mobile-menu-checkbox:checked ~ .mobile-menu-container {
+    display: block;
+}
+
+/* User profile styles */
+.user-profile-img {
+    width: 60px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.user-profile-img-white-bg {
+    background-color: white;
+}
+
+.user-profile-name {
+    color: white;
+    font-size: medium;
+}
+
+.user-profile-name-large {
+    font-size: x-large;
+}
+
+.mobile-user-profile-img {
+    width: 30px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 6px;
+    object-fit: cover;
+}
+
+.mobile-user-profile-name {
+    color: #2d5016;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.page-title-mobile {
+    font-size: 1rem;
 }
 
 /* Tablet/Small screens - keep book cards horizontal */
@@ -512,6 +756,30 @@ body {
         flex-direction: row;
         flex-wrap: wrap;
     }
+    
+    /* Loans table on mobile */
+    .loan-book-info {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+    }
+    
+    .loan-book-cover-sm {
+        margin-bottom: 10px;
+    }
+    
+    .loan-book-text {
+        width: 100%;
+    }
+    
+    /* Make table responsive */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 800px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -568,5 +836,11 @@ body {
     .book-details-actions .not-available-btn {
         width: 100% !important;
         max-width: 100%;
+    }
+    
+    /* Loans table on smallest screens */
+    .loan-book-info {
+        flex-direction: column !important;
+        align-items: center !important;
     }
 }

@@ -126,13 +126,7 @@ def renew_loan(loan_id):
         flash('Unauthorized access.', 'danger')
         return redirect(url_for('bookController.my_loans'))
     
-    # Generate random new borrow date (10-20 days after current borrow date, but not later than today)
-    days_after = random.randint(10, 20)
-    new_borrow_date = loan.borrowDate + timedelta(days=days_after)
-    
-    # Ensure new borrow date is not later than today
-    if new_borrow_date > datetime.now():
-        new_borrow_date = datetime.now()
+    new_borrow_date = datetime.now()
     
     # Update the loan manually
     if loan.returnDate is not None:
@@ -148,7 +142,7 @@ def renew_loan(loan_id):
     loan.borrowDate = new_borrow_date
     loan.save()
     
-    flash(f"Successfully renewed '{loan.book.title}'. New borrow date: {new_borrow_date.strftime('%d %b %Y')}.", 'success')
+    flash(f"Successfully renewed '{loan.book.title}'.", 'success')
     return redirect(url_for('bookController.my_loans'))
 
 
@@ -167,13 +161,7 @@ def return_loan(loan_id):
         flash('Unauthorized access.', 'danger')
         return redirect(url_for('bookController.my_loans'))
     
-    # Generate random return date (10-20 days after current borrow date, but not later than today)
-    days_after = random.randint(10, 20)
-    return_date = loan.borrowDate + timedelta(days=days_after)
-    
-    # Ensure return date is not later than today
-    if return_date > datetime.now():
-        return_date = datetime.now()
+    return_date = datetime.now()
     
     # Return the loan with the generated date
     success, message = loan.return_loan(return_date)
